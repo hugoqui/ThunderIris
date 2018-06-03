@@ -1,0 +1,763 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ZionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tcBills">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="nchar" MaxLength="9" />
+          <Property Name="IsCredit" Type="bit" />
+          <Property Name="PaymentMethod" Type="int" />
+          <Property Name="User" Type="nchar" MaxLength="10" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tcClientDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="nchar" MaxLength="9" Nullable="false" />
+          <Property Name="Payment" Type="money" />
+          <Property Name="Credit" Type="money" />
+          <Property Name="PaymentMethod" Type="int" />
+          <Property Name="BillId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcClients">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nchar" MaxLength="9" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="BirthDate" Type="date" />
+          <Property Name="Group" Type="int" />
+          <Property Name="Email" Type="text" />
+          <Property Name="Parent" Type="text" />
+          <Property Name="Phone" Type="text" />
+          <Property Name="Comments" Type="text" />
+        </EntityType>
+        <EntityType Name="tcExpenses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="Comments" Type="text" />
+          <Property Name="Amount" Type="money" />
+          <Property Name="Date" Type="date" />
+        </EntityType>
+        <EntityType Name="tcGroups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="text" />
+        </EntityType>
+        <EntityType Name="tcProducts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="Cost" Type="money" />
+          <Property Name="Price" Type="money" />
+          <Property Name="Stock" Type="int" />
+        </EntityType>
+        <EntityType Name="tcProductSales">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Price" Type="money" />
+          <Property Name="BillId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcPurchaseCorrelative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tcPurchases">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="nchar" MaxLength="10" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Cost" Type="money" />
+          <Property Name="PruchaseId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcServices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="Price" Type="money" />
+        </EntityType>
+        <EntityType Name="tcServiceSales">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceId" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Price" Type="money" />
+          <Property Name="BillId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Password" Type="text" />
+          <Property Name="Level" Type="int" />
+        </EntityType>
+        <Association Name="Bill_Client">
+          <End Role="tcClients" Type="Self.tcClients" Multiplicity="0..1" />
+          <End Role="tcBills" Type="Self.tcBills" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcClients">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcBills">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Bill_User">
+          <End Role="tcUsers" Type="Self.tcUsers" Multiplicity="0..1" />
+          <End Role="tcBills" Type="Self.tcBills" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcBills">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Client_Group">
+          <End Role="tcGroups" Type="Self.tcGroups" Multiplicity="0..1" />
+          <End Role="tcClients" Type="Self.tcClients" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcGroups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClients">
+              <PropertyRef Name="Group" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tcClientD__BillI__67DE6983">
+          <End Role="tcBills" Type="Self.tcBills" Multiplicity="0..1" />
+          <End Role="tcClientDetails" Type="Self.tcClientDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcBills">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClientDetails">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tcClientD__Clien__68D28DBC">
+          <End Role="tcClients" Type="Self.tcClients" Multiplicity="1" />
+          <End Role="tcClientDetails" Type="Self.tcClientDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcClients">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClientDetails">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductSales_Bill">
+          <End Role="tcBills" Type="Self.tcBills" Multiplicity="0..1" />
+          <End Role="tcProductSales" Type="Self.tcProductSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcBills">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcProductSales">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductSales_Product">
+          <End Role="tcProducts" Type="Self.tcProducts" Multiplicity="0..1" />
+          <End Role="tcProductSales" Type="Self.tcProductSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcProducts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcProductSales">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Purchase_PurchaseCorrelative">
+          <End Role="tcPurchaseCorrelative" Type="Self.tcPurchaseCorrelative" Multiplicity="0..1" />
+          <End Role="tcPurchases" Type="Self.tcPurchases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcPurchaseCorrelative">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcPurchases">
+              <PropertyRef Name="PruchaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ServiceSales_Bill">
+          <End Role="tcBills" Type="Self.tcBills" Multiplicity="0..1" />
+          <End Role="tcServiceSales" Type="Self.tcServiceSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcBills">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcServiceSales">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ServiceSales_ServiceId">
+          <End Role="tcServices" Type="Self.tcServices" Multiplicity="0..1" />
+          <End Role="tcServiceSales" Type="Self.tcServiceSales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcServiceSales">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ZionModelStoreContainer">
+          <EntitySet Name="tcBills" EntityType="Self.tcBills" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcClientDetails" EntityType="Self.tcClientDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcClients" EntityType="Self.tcClients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcExpenses" EntityType="Self.tcExpenses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcGroups" EntityType="Self.tcGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcProducts" EntityType="Self.tcProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcProductSales" EntityType="Self.tcProductSales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcPurchaseCorrelative" EntityType="Self.tcPurchaseCorrelative" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcPurchases" EntityType="Self.tcPurchases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcServices" EntityType="Self.tcServices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcServiceSales" EntityType="Self.tcServiceSales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcUsers" EntityType="Self.tcUsers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="Bill_Client" Association="Self.Bill_Client">
+            <End Role="tcClients" EntitySet="tcClients" />
+            <End Role="tcBills" EntitySet="tcBills" />
+          </AssociationSet>
+          <AssociationSet Name="Bill_User" Association="Self.Bill_User">
+            <End Role="tcUsers" EntitySet="tcUsers" />
+            <End Role="tcBills" EntitySet="tcBills" />
+          </AssociationSet>
+          <AssociationSet Name="Client_Group" Association="Self.Client_Group">
+            <End Role="tcGroups" EntitySet="tcGroups" />
+            <End Role="tcClients" EntitySet="tcClients" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tcClientD__BillI__67DE6983" Association="Self.FK__tcClientD__BillI__67DE6983">
+            <End Role="tcBills" EntitySet="tcBills" />
+            <End Role="tcClientDetails" EntitySet="tcClientDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tcClientD__Clien__68D28DBC" Association="Self.FK__tcClientD__Clien__68D28DBC">
+            <End Role="tcClients" EntitySet="tcClients" />
+            <End Role="tcClientDetails" EntitySet="tcClientDetails" />
+          </AssociationSet>
+          <AssociationSet Name="ProductSales_Bill" Association="Self.ProductSales_Bill">
+            <End Role="tcBills" EntitySet="tcBills" />
+            <End Role="tcProductSales" EntitySet="tcProductSales" />
+          </AssociationSet>
+          <AssociationSet Name="ProductSales_Product" Association="Self.ProductSales_Product">
+            <End Role="tcProducts" EntitySet="tcProducts" />
+            <End Role="tcProductSales" EntitySet="tcProductSales" />
+          </AssociationSet>
+          <AssociationSet Name="Purchase_PurchaseCorrelative" Association="Self.Purchase_PurchaseCorrelative">
+            <End Role="tcPurchaseCorrelative" EntitySet="tcPurchaseCorrelative" />
+            <End Role="tcPurchases" EntitySet="tcPurchases" />
+          </AssociationSet>
+          <AssociationSet Name="ServiceSales_Bill" Association="Self.ServiceSales_Bill">
+            <End Role="tcBills" EntitySet="tcBills" />
+            <End Role="tcServiceSales" EntitySet="tcServiceSales" />
+          </AssociationSet>
+          <AssociationSet Name="ServiceSales_ServiceId" Association="Self.ServiceSales_ServiceId">
+            <End Role="tcServices" EntitySet="tcServices" />
+            <End Role="tcServiceSales" EntitySet="tcServiceSales" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ZionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tcBill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="String" MaxLength="9" FixedLength="true" Unicode="true" />
+          <Property Name="IsCredit" Type="Boolean" />
+          <Property Name="PaymentMethod" Type="Int32" />
+          <Property Name="User" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="tcClient" Relationship="Self.Bill_Client" FromRole="tcBills" ToRole="tcClients" />
+          <NavigationProperty Name="tcUser" Relationship="Self.Bill_User" FromRole="tcBills" ToRole="tcUsers" />
+          <NavigationProperty Name="tcProductSales" Relationship="Self.ProductSales_Bill" FromRole="tcBills" ToRole="tcProductSales" />
+          <NavigationProperty Name="tcServiceSales" Relationship="Self.ServiceSales_Bill" FromRole="tcBills" ToRole="tcServiceSales" />
+          <NavigationProperty Name="tcClientDetails" Relationship="ZionModel.FK__tcClientD__BillI__67DE6983" FromRole="tcBill" ToRole="tcClientDetail" />
+        </EntityType>
+        <EntityType Name="tcClient">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="9" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="BirthDate" Type="DateTime" Precision="0" />
+          <Property Name="Group" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Parent" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tcBills" Relationship="Self.Bill_Client" FromRole="tcClients" ToRole="tcBills" />
+          <NavigationProperty Name="tcGroup" Relationship="Self.Client_Group" FromRole="tcClients" ToRole="tcGroups" />
+          <NavigationProperty Name="tcClientDetails" Relationship="ZionModel.FK__tcClientD__Clien__68D28DBC" FromRole="tcClient" ToRole="tcClientDetail" />
+        </EntityType>
+        <EntityType Name="tcExpense">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Date" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="tcGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tcClients" Relationship="Self.Client_Group" FromRole="tcGroups" ToRole="tcClients" />
+        </EntityType>
+        <EntityType Name="tcProduct">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Stock" Type="Int32" />
+          <NavigationProperty Name="tcProductSales" Relationship="Self.ProductSales_Product" FromRole="tcProducts" ToRole="tcProductSales" />
+        </EntityType>
+        <EntityType Name="tcProductSale">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="BillId" Type="Int32" />
+          <NavigationProperty Name="tcBill" Relationship="Self.ProductSales_Bill" FromRole="tcProductSales" ToRole="tcBills" />
+          <NavigationProperty Name="tcProduct" Relationship="Self.ProductSales_Product" FromRole="tcProductSales" ToRole="tcProducts" />
+        </EntityType>
+        <EntityType Name="tcPurchaseCorrelative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="tcPurchases" Relationship="Self.Purchase_PurchaseCorrelative" FromRole="tcPurchaseCorrelative" ToRole="tcPurchases" />
+        </EntityType>
+        <EntityType Name="tcPurchas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PruchaseId" Type="Int32" />
+          <NavigationProperty Name="tcPurchaseCorrelative" Relationship="Self.Purchase_PurchaseCorrelative" FromRole="tcPurchases" ToRole="tcPurchaseCorrelative" />
+        </EntityType>
+        <EntityType Name="tcService">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <NavigationProperty Name="tcServiceSales" Relationship="Self.ServiceSales_ServiceId" FromRole="tcServices" ToRole="tcServiceSales" />
+        </EntityType>
+        <EntityType Name="tcServiceSale">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceId" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="BillId" Type="Int32" />
+          <NavigationProperty Name="tcBill" Relationship="Self.ServiceSales_Bill" FromRole="tcServiceSales" ToRole="tcBills" />
+          <NavigationProperty Name="tcService" Relationship="Self.ServiceSales_ServiceId" FromRole="tcServiceSales" ToRole="tcServices" />
+        </EntityType>
+        <EntityType Name="tcUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int32" />
+          <NavigationProperty Name="tcBills" Relationship="Self.Bill_User" FromRole="tcUsers" ToRole="tcBills" />
+        </EntityType>
+        <Association Name="Bill_Client">
+          <End Role="tcClients" Type="Self.tcClient" Multiplicity="0..1" />
+          <End Role="tcBills" Type="Self.tcBill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcClients">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcBills">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Bill_User">
+          <End Role="tcUsers" Type="Self.tcUser" Multiplicity="0..1" />
+          <End Role="tcBills" Type="Self.tcBill" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcBills">
+              <PropertyRef Name="User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductSales_Bill">
+          <End Role="tcBills" Type="Self.tcBill" Multiplicity="0..1" />
+          <End Role="tcProductSales" Type="Self.tcProductSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcBills">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcProductSales">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ServiceSales_Bill">
+          <End Role="tcBills" Type="Self.tcBill" Multiplicity="0..1" />
+          <End Role="tcServiceSales" Type="Self.tcServiceSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcBills">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcServiceSales">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Client_Group">
+          <End Role="tcGroups" Type="Self.tcGroup" Multiplicity="0..1" />
+          <End Role="tcClients" Type="Self.tcClient" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcGroups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClients">
+              <PropertyRef Name="Group" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ProductSales_Product">
+          <End Role="tcProducts" Type="Self.tcProduct" Multiplicity="0..1" />
+          <End Role="tcProductSales" Type="Self.tcProductSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcProducts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcProductSales">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Purchase_PurchaseCorrelative">
+          <End Role="tcPurchaseCorrelative" Type="Self.tcPurchaseCorrelative" Multiplicity="0..1" />
+          <End Role="tcPurchases" Type="Self.tcPurchas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcPurchaseCorrelative">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcPurchases">
+              <PropertyRef Name="PruchaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ServiceSales_ServiceId">
+          <End Role="tcServices" Type="Self.tcService" Multiplicity="0..1" />
+          <End Role="tcServiceSales" Type="Self.tcServiceSale" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcServices">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcServiceSales">
+              <PropertyRef Name="ServiceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ZionEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tcBills" EntityType="Self.tcBill" />
+          <EntitySet Name="tcClients" EntityType="Self.tcClient" />
+          <EntitySet Name="tcExpenses" EntityType="ZionModel.tcExpense" />
+          <EntitySet Name="tcGroups" EntityType="Self.tcGroup" />
+          <EntitySet Name="tcProducts" EntityType="Self.tcProduct" />
+          <EntitySet Name="tcProductSales" EntityType="Self.tcProductSale" />
+          <EntitySet Name="tcPurchaseCorrelatives" EntityType="Self.tcPurchaseCorrelative" />
+          <EntitySet Name="tcPurchases" EntityType="Self.tcPurchas" />
+          <EntitySet Name="tcServices" EntityType="Self.tcService" />
+          <EntitySet Name="tcServiceSales" EntityType="Self.tcServiceSale" />
+          <EntitySet Name="tcUsers" EntityType="Self.tcUser" />
+          <AssociationSet Name="Bill_Client" Association="Self.Bill_Client">
+            <End Role="tcClients" EntitySet="tcClients" />
+            <End Role="tcBills" EntitySet="tcBills" />
+          </AssociationSet>
+          <AssociationSet Name="Bill_User" Association="Self.Bill_User">
+            <End Role="tcUsers" EntitySet="tcUsers" />
+            <End Role="tcBills" EntitySet="tcBills" />
+          </AssociationSet>
+          <AssociationSet Name="ProductSales_Bill" Association="Self.ProductSales_Bill">
+            <End Role="tcBills" EntitySet="tcBills" />
+            <End Role="tcProductSales" EntitySet="tcProductSales" />
+          </AssociationSet>
+          <AssociationSet Name="ServiceSales_Bill" Association="Self.ServiceSales_Bill">
+            <End Role="tcBills" EntitySet="tcBills" />
+            <End Role="tcServiceSales" EntitySet="tcServiceSales" />
+          </AssociationSet>
+          <AssociationSet Name="Client_Group" Association="Self.Client_Group">
+            <End Role="tcGroups" EntitySet="tcGroups" />
+            <End Role="tcClients" EntitySet="tcClients" />
+          </AssociationSet>
+          <AssociationSet Name="ProductSales_Product" Association="Self.ProductSales_Product">
+            <End Role="tcProducts" EntitySet="tcProducts" />
+            <End Role="tcProductSales" EntitySet="tcProductSales" />
+          </AssociationSet>
+          <AssociationSet Name="Purchase_PurchaseCorrelative" Association="Self.Purchase_PurchaseCorrelative">
+            <End Role="tcPurchaseCorrelative" EntitySet="tcPurchaseCorrelatives" />
+            <End Role="tcPurchases" EntitySet="tcPurchases" />
+          </AssociationSet>
+          <AssociationSet Name="ServiceSales_ServiceId" Association="Self.ServiceSales_ServiceId">
+            <End Role="tcServices" EntitySet="tcServices" />
+            <End Role="tcServiceSales" EntitySet="tcServiceSales" />
+          </AssociationSet>
+          <EntitySet Name="tcClientDetails" EntityType="ZionModel.tcClientDetail" />
+          <AssociationSet Name="FK__tcClientD__BillI__67DE6983" Association="ZionModel.FK__tcClientD__BillI__67DE6983">
+            <End Role="tcBill" EntitySet="tcBills" />
+            <End Role="tcClientDetail" EntitySet="tcClientDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK__tcClientD__Clien__68D28DBC" Association="ZionModel.FK__tcClientD__Clien__68D28DBC">
+            <End Role="tcClient" EntitySet="tcClients" />
+            <End Role="tcClientDetail" EntitySet="tcClientDetails" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tcClientDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="String" Nullable="false" MaxLength="9" FixedLength="true" Unicode="true" />
+          <Property Name="Payment" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Credit" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PaymentMethod" Type="Int32" />
+          <Property Name="BillId" Type="Int32" />
+          <NavigationProperty Name="tcBill" Relationship="ZionModel.FK__tcClientD__BillI__67DE6983" FromRole="tcClientDetail" ToRole="tcBill" />
+          <NavigationProperty Name="tcClient" Relationship="ZionModel.FK__tcClientD__Clien__68D28DBC" FromRole="tcClientDetail" ToRole="tcClient" />
+        </EntityType>
+        <Association Name="FK__tcClientD__BillI__67DE6983">
+          <End Type="ZionModel.tcBill" Role="tcBill" Multiplicity="0..1" />
+          <End Type="ZionModel.tcClientDetail" Role="tcClientDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcBill">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClientDetail">
+              <PropertyRef Name="BillId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__tcClientD__Clien__68D28DBC">
+          <End Type="ZionModel.tcClient" Role="tcClient" Multiplicity="1" />
+          <End Type="ZionModel.tcClientDetail" Role="tcClientDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tcClient">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClientDetail">
+              <PropertyRef Name="ClientId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ZionModelStoreContainer" CdmEntityContainer="ZionEntities">
+          <EntitySetMapping Name="tcBills">
+            <EntityTypeMapping TypeName="ZionModel.tcBill">
+              <MappingFragment StoreEntitySet="tcBills">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="IsCredit" ColumnName="IsCredit" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcClients">
+            <EntityTypeMapping TypeName="ZionModel.tcClient">
+              <MappingFragment StoreEntitySet="tcClients">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Parent" ColumnName="Parent" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcExpenses">
+            <EntityTypeMapping TypeName="ZionModel.tcExpense">
+              <MappingFragment StoreEntitySet="tcExpenses">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcGroups">
+            <EntityTypeMapping TypeName="ZionModel.tcGroup">
+              <MappingFragment StoreEntitySet="tcGroups">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcProducts">
+            <EntityTypeMapping TypeName="ZionModel.tcProduct">
+              <MappingFragment StoreEntitySet="tcProducts">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcProductSales">
+            <EntityTypeMapping TypeName="ZionModel.tcProductSale">
+              <MappingFragment StoreEntitySet="tcProductSales">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcPurchaseCorrelatives">
+            <EntityTypeMapping TypeName="ZionModel.tcPurchaseCorrelative">
+              <MappingFragment StoreEntitySet="tcPurchaseCorrelative">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcPurchases">
+            <EntityTypeMapping TypeName="ZionModel.tcPurchas">
+              <MappingFragment StoreEntitySet="tcPurchases">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="PruchaseId" ColumnName="PruchaseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcServices">
+            <EntityTypeMapping TypeName="ZionModel.tcService">
+              <MappingFragment StoreEntitySet="tcServices">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcServiceSales">
+            <EntityTypeMapping TypeName="ZionModel.tcServiceSale">
+              <MappingFragment StoreEntitySet="tcServiceSales">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcUsers">
+            <EntityTypeMapping TypeName="ZionModel.tcUser">
+              <MappingFragment StoreEntitySet="tcUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcClientDetails">
+            <EntityTypeMapping TypeName="ZionModel.tcClientDetail">
+              <MappingFragment StoreEntitySet="tcClientDetails">
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="Credit" ColumnName="Credit" />
+                <ScalarProperty Name="Payment" ColumnName="Payment" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

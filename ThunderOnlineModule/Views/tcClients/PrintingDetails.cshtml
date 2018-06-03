@@ -1,0 +1,81 @@
+﻿@model ThunderOnlineModule.Models.tcClient
+
+@{
+    ViewBag.Title = "Details";
+}
+<style>
+    tr, td{
+        padding:4px !important;
+    }
+</style>
+
+<div style="top: 0;position: absolute;width: auto;left: 10px;right: 10px;">
+    <h2>Detalles</h2>
+    <h4 class="text-primary">@Model.Id / @Model.Name</h4>
+    <h5 class="text-success">@Model.tcGroup.Name</h5>
+
+
+    <table class="table table-bordered table-hover" id="balanceDetail">
+        <tr style="font-weight:bold; color:#fff; text-align:center" class="transparent">
+            <td>Fecha</td>
+            <td>Abono</td>
+            <td>Crédito</td>
+            <td>Comprobante</td>
+            <td>Metodo Pago</td>
+            <td>Balance</td>
+        </tr>
+        @{ decimal? balance = 0;}
+        @foreach (var item in Model.tcClientDetails)
+        {
+            <tr style="text-align:right;">
+                <td>@item.tcBill.Date.Value.ToShortDateString()</td>
+                <td>
+                    @if (item.Payment != 0)
+                    {
+                        <div> @string.Format("{0:C}", item.Payment)</div>
+                    }
+                </td>
+                <td>
+                    @if (item.Credit != 0)
+                    {
+                        <div>@string.Format("{0:C}", item.Credit)</div>
+                    }
+                </td>
+                <td>@item.BillId</td>
+                @{ var textResult = "";}
+                @switch (item.PaymentMethod)
+                {
+                    default:
+                        textResult = "Efectivo";
+                        break;
+                    case 1:
+                        textResult = "Tarjeta";
+                        break;
+                    case 2:
+                        textResult = "Cheque";
+                        break;
+                    case 3:
+                        textResult = "Depósito";
+                        break;
+                }
+                @{ if (item.tcBill.IsCredit == true)
+                    {
+                        textResult = "";
+                    }}
+                <td>@textResult</td>
+                @{
+                    if (item.Credit != null) { balance = balance + item.Credit; }
+                    if (item.Payment != null) { balance = balance - item.Payment; }
+                }
+                <td>@string.Format("{0:C}", balance)</td>
+            </tr>
+        }
+    </table>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        window.print(); 
+        window.close();
+    });
+</script>

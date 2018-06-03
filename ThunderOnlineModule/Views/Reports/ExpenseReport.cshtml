@@ -1,0 +1,71 @@
+﻿@model List<ThunderOnlineModule.Models.tcExpense>
+@{
+    ViewBag.Title = "Reporte de Gastos";
+    decimal? total = 0;
+    
+    var fromDate = ViewBag.fromYear + "-";
+    var mm = ViewBag.fromMonth;
+    if (mm < 10) { mm = "0" + mm; }
+    var dd = ViewBag.fromDay;
+    if (dd < 10) { dd = "0" + dd; }
+
+    fromDate = fromDate + mm + "-" + dd;
+
+    var toDate = ViewBag.toYear + "-";
+    mm = ViewBag.toMonth;
+    if (mm < 10) { mm = "0" + mm; }
+    dd = ViewBag.toDay;
+    if (dd < 10) { dd = "0" + dd; }
+
+    toDate = toDate + mm + "-" + dd;
+}
+<a class="btn" style="float:right; margin-top:15px" href="@Url.Action("Index","Home")">Regresar</a>
+<form action="ExpenseReport" method="post">
+    <h2 style="color: #6a567c; border-bottom: 2px solid;">Reporte de Gastos</h2>
+    <div class="container transparent">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="fromDate">Fecha Inicial</label>
+                <input onchange="DateChange()" type="date" id="fromDate" name="fromDate" class="form-control" value="@fromDate" />
+            </div>
+            <div class="col-md-5">
+                <label for="fromDate">Fecha Inicial</label>
+                <input onchange="DateChange()" type="date" id="toDate" name="toDate" class="form-control" value="@toDate" />
+            </div>
+            <div class="col-md-2">
+                <div class="hidden-sm hidden-xs" style="height:25px"></div>
+                <button type="submit" class="btn btn-default">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+<table class="table table-bordered">
+    <thead>
+        <tr style="font-weight:bold; color:#e8e4e4">           
+            <td width="100">Fecha</td>
+            <td>Gasto</td>
+            <td>Comentarios</td>
+            <td width="150" align="center">Monto</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            total = total + item.Amount;
+            <tr>
+                <td>@item.Date.Value.ToShortDateString()</td>
+                <td>@item.Name</td>
+                <td>@item.Comments</td>
+                <td align="right">@string.Format("{0:C}", item.Amount)</td>
+            </tr>
+        }
+
+        <tr style="font-weight:bold; color:#fff">
+            <td colspan="3" align="center">TOTAL</td>
+            <td align="right">@string.Format("{0:C}",total)</td>
+        </tr>
+    </tbody>
+
+</table>
+

@@ -1,0 +1,67 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@model List<ThunderOnlineModule.Models.tcBill>
+@{
+    ViewBag.Title = "Service Sale Report";
+    decimal? total = 0;
+}
+
+<h3 class="text-primary">Reporte de Venta de Productos <i>del @ViewBag.fromDate  al @ViewBag.toDate </i></h3>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr style="font-weight:bold">
+            <td>Comprobante</td>
+            <td>Forma de Pago</td>
+            <td>Fecha</td>
+            <td>Servicio</td>
+            <td align="right">Cantidad</td>
+            <td align="right">Precio</td>
+            <td align="right">Total</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bill in Model)
+        {
+            foreach (var sale in bill.tcServiceSales)
+            {
+
+                var subTotal = sale.Price * sale.Quantity;
+                total = total + subTotal;
+                var paymentMethod = "Efectivo";
+                switch (sale.tcBill.PaymentMethod)
+                {
+                    default:
+                        paymentMethod = "Efectivo";
+                        break;
+                    case 1:
+                        paymentMethod = "Tarjeta";
+                        break;
+                    case 2:
+                        paymentMethod = "Cheque";
+                        break;
+                    case 3:
+                        paymentMethod = "Depósito";
+                        break;
+                }
+
+                <tr>
+                    <td>@bill.Id</td>
+                    <td>@paymentMethod</td>
+                    <td>@bill.Date.Value.ToShortDateString()</td>
+                    <td>@sale.ServiceId | @sale.tcService.Name</td>
+                    <td align="right">  @sale.Quantity</td>
+                    <td align="right"> @string.Format("{0:C}", sale.Price)  </td>
+                    <td align="right">  @string.Format("{0:C}", subTotal)  </td>
+                </tr>
+            }
+        }
+
+
+        <tr style="font-weight:bold;">
+            <td colspan="6" align="right">T O T A L</td>
+            <td align="right">@string.Format("{0:C}", total) </td>
+        </tr>
+    </tbody>
+
+</table>

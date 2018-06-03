@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ThunderOnlineModule.Models.tcExpense>
+
+<a href="@Url.Action("Index","Home")" style="float:right; margin-top:35px">Regresar</a>
+<h2>Detalle de Ventas</h2>
+<hr />
+<h4 style="color:#fff">Ultimos 10 registros</h4>
+<a href="@Url.Action("ExpenseReport","Reports")" class="btn btn-danger" style="float:right; margin-top:-30px">
+    <i class="fa fa-chart-line"></i> Ver reporte
+</a>
+<br />
+<p>
+    @Html.ActionLink("+ Crear Nuevo", "Create")
+</p>
+<table class="table">
+    <tr style="background-color:rgba(255, 255, 255, 0.24); color:#fff">
+        <th>
+            Gasto
+        </th>
+        <th>
+            Comentarios
+        </th>
+        <th>
+            Cantidad
+        </th>
+        <th>
+            Fecha
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comments)
+            </td>
+            <td>
+                @string.Format("{0:C}", item.Amount)
+            </td>
+            <td>
+                @item.Date.Value.ToShortDateString()
+            </td>
+            <td>
+                @Html.ActionLink("Modificar", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>

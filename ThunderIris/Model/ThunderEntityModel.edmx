@@ -1,0 +1,402 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ThunderModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tcBills">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ClientId" Type="int" />
+          <Property Name="IsCredit" Type="bit" />
+          <Property Name="PaymentMethod" Type="int" />
+          <Property Name="User" Type="text" />
+          <Property Name="Date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="tcClients">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="BirthDate" Type="date" />
+          <Property Name="Group" Type="int" />
+          <Property Name="Email" Type="text" />
+          <Property Name="Parent" Type="text" />
+          <Property Name="Phone" Type="text" />
+          <Property Name="Comments" Type="text" />
+        </EntityType>
+        <EntityType Name="tcExpenses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="text" />
+          <Property Name="Comments" Type="text" />
+          <Property Name="Amount" Type="money" />
+        </EntityType>
+        <EntityType Name="tcGroups">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="text" />
+        </EntityType>
+        <EntityType Name="tcProducts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="text" />
+          <Property Name="Cost" Type="money" />
+          <Property Name="Price" Type="money" />
+          <Property Name="Stock" Type="int" />
+        </EntityType>
+        <EntityType Name="tcProductSells">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Price" Type="money" />
+          <Property Name="BillId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcPurchaseCorrelative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tcPurchases">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="nchar" MaxLength="10" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Cost" Type="money" />
+          <Property Name="PruchaseId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcServices">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="text" />
+          <Property Name="Price" Type="money" />
+        </EntityType>
+        <EntityType Name="tcServiceSells">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServiceId" Type="int" />
+          <Property Name="Quantity" Type="int" />
+          <Property Name="Price" Type="money" />
+          <Property Name="BillId" Type="int" />
+        </EntityType>
+        <EntityType Name="tcUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="Password" Type="text" />
+          <Property Name="Level" Type="int" />
+        </EntityType>
+        <EntityContainer Name="ThunderModelStoreContainer">
+          <EntitySet Name="tcBills" EntityType="Self.tcBills" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcClients" EntityType="Self.tcClients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcExpenses" EntityType="Self.tcExpenses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcGroups" EntityType="Self.tcGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcProducts" EntityType="Self.tcProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcProductSells" EntityType="Self.tcProductSells" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcPurchaseCorrelative" EntityType="Self.tcPurchaseCorrelative" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcPurchases" EntityType="Self.tcPurchases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcServices" EntityType="Self.tcServices" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcServiceSells" EntityType="Self.tcServiceSells" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tcUsers" EntityType="Self.tcUsers" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ThunderModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tcBill">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ClientId" Type="Int32" />
+          <Property Name="IsCredit" Type="Boolean" />
+          <Property Name="PaymentMethod" Type="Int32" />
+          <Property Name="User" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="tcClient">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="BirthDate" Type="DateTime" Precision="0" />
+          <Property Name="Group" Type="Int32" />
+          <Property Name="Email" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Parent" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Phone" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tcGroup" Relationship="Self.client2group" FromRole="tcClients" ToRole="tcGroups" />
+        </EntityType>
+        <EntityType Name="tcExpens">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Amount" Type="Decimal" Precision="19" Scale="4" />
+        </EntityType>
+        <EntityType Name="tcGroup">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="tcClient" Relationship="Self.client2group" FromRole="tcGroups" ToRole="tcClients" />
+        </EntityType>
+        <EntityType Name="tcProduct">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Stock" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tcProductSell">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="BillId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tcPurchaseCorrelative">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="tcPurchas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Cost" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PruchaseId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tcService">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+        </EntityType>
+        <EntityType Name="tcServiceSell">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServiceId" Type="Int32" />
+          <Property Name="Quantity" Type="Int32" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="BillId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tcUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int32" />
+        </EntityType>
+        <Association Name="client2group">
+          <End Role="tcGroups" Type="Self.tcGroup" Multiplicity="1" />
+          <End Role="tcClients" Type="Self.tcClient" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="tcGroups">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="tcClients">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="TCESbaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tcBills" EntityType="Self.tcBill" />
+          <EntitySet Name="tcClients" EntityType="Self.tcClient" />
+          <EntitySet Name="tcExpenses" EntityType="Self.tcExpens" />
+          <EntitySet Name="tcGroups" EntityType="Self.tcGroup" />
+          <EntitySet Name="tcProducts" EntityType="Self.tcProduct" />
+          <EntitySet Name="tcProductSells" EntityType="Self.tcProductSell" />
+          <EntitySet Name="tcPurchaseCorrelatives" EntityType="Self.tcPurchaseCorrelative" />
+          <EntitySet Name="tcPurchases" EntityType="Self.tcPurchas" />
+          <EntitySet Name="tcServices" EntityType="Self.tcService" />
+          <EntitySet Name="tcServiceSells" EntityType="Self.tcServiceSell" />
+          <EntitySet Name="tcUsers" EntityType="Self.tcUser" />
+          <AssociationSet Name="client2group" Association="Self.client2group">
+            <End Role="tcGroups" EntitySet="tcGroups" />
+            <End Role="tcClients" EntitySet="tcClients" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ThunderModelStoreContainer" CdmEntityContainer="TCESbaseEntities">
+          <EntitySetMapping Name="tcBills">
+            <EntityTypeMapping TypeName="ThunderModel.tcBill">
+              <MappingFragment StoreEntitySet="tcBills">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="User" ColumnName="User" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <ScalarProperty Name="IsCredit" ColumnName="IsCredit" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcClients">
+            <EntityTypeMapping TypeName="ThunderModel.tcClient">
+              <MappingFragment StoreEntitySet="tcClients">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Parent" ColumnName="Parent" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcExpenses">
+            <EntityTypeMapping TypeName="ThunderModel.tcExpens">
+              <MappingFragment StoreEntitySet="tcExpenses">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcGroups">
+            <EntityTypeMapping TypeName="ThunderModel.tcGroup">
+              <MappingFragment StoreEntitySet="tcGroups">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcProducts">
+            <EntityTypeMapping TypeName="ThunderModel.tcProduct">
+              <MappingFragment StoreEntitySet="tcProducts">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcProductSells">
+            <EntityTypeMapping TypeName="ThunderModel.tcProductSell">
+              <MappingFragment StoreEntitySet="tcProductSells">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcPurchaseCorrelatives">
+            <EntityTypeMapping TypeName="ThunderModel.tcPurchaseCorrelative">
+              <MappingFragment StoreEntitySet="tcPurchaseCorrelative">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcPurchases">
+            <EntityTypeMapping TypeName="ThunderModel.tcPurchas">
+              <MappingFragment StoreEntitySet="tcPurchases">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Cost" ColumnName="Cost" />
+                <ScalarProperty Name="PruchaseId" ColumnName="PruchaseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcServices">
+            <EntityTypeMapping TypeName="ThunderModel.tcService">
+              <MappingFragment StoreEntitySet="tcServices">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcServiceSells">
+            <EntityTypeMapping TypeName="ThunderModel.tcServiceSell">
+              <MappingFragment StoreEntitySet="tcServiceSells">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ServiceId" ColumnName="ServiceId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tcUsers">
+            <EntityTypeMapping TypeName="ThunderModel.tcUser">
+              <MappingFragment StoreEntitySet="tcUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

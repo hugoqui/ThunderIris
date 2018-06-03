@@ -1,0 +1,92 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+
+<div class="container">
+    <h1 class="h1" style="border-bottom:2px solid #6a567c; color:#6a567c"><i class="fas fa-cog"></i>  Administrar</h1>
+    <div class="row">
+        <a class="col-xs-6 col-sm-3 flatButton" href="/tcClients" onclick="ShowPacifier()">
+            <h1 class="fas fa-user fa-4x" style="color:#7923c4"></h1>
+            <h3> Clientes </h3>
+        </a>
+
+        <a class="col-xs-6 col-sm-3 flatButton" href="/tcGroups" onclick="ShowPacifier()">
+            <h1 class="fas fa-clipboard-list fa-4x" style="color:#7923c4"></h1>
+            <h3>Grupos </h3>
+        </a>
+
+        <a class="col-xs-6 col-sm-3 flatButton" href="/tcProducts" onclick="ShowPacifier()">
+            <h1 class="fas fa-box fa-4x" style="color:#7923c4"></h1>
+            <h3>Productos</h3>
+        </a>
+
+        <a class="col-xs-6 col-sm-3 flatButton" href="/tcServices" onclick="ShowPacifier()">
+            <h1 class="fas fa-thumbtack fa-4x" style="color:#7923c4"></h1>
+            <h3>Servicios </h3>
+        </a>
+    </div>
+
+    <h1 class="h1" style="border-bottom:2px solid #6a567c; color:#6a567c"><i class="fas fa-chevron-circle-right"></i>  Transacciones</h1>
+    <div class="row">
+        <a class="col-xs-6 col-sm-3 flatButton" href="/tcProductSales/Sale" onclick="ShowPacifier()">
+            <h1 class="fas fa-cart-plus fa-4x" style="color:#7923c4"></h1>
+            <h3> Venta de Productos </h3>
+        </a>
+        <a class="col-xs-6 col-sm-3 flatButton" href="@Url.Action("ServiceSale","tcServices")" onclick="ShowPacifier()">
+            <h1 class="far fa-handshake fa-4x" style="color:#7923c4"></h1>
+            <h3>Venta de Servicios </h3>
+        </a>
+        <a class="col-xs-6 col-sm-3 flatButton" href="@Url.Action("Index","tcExpenses")" onclick="ShowPacifier()">
+            <h1 class="fas fa-check fa-4x" style="color:#7923c4"></h1>
+            <h3>Registro de Gastos </h3>
+        </a>
+        <a class="col-xs-6 col-sm-3 flatButton" href="@Url.Action("Index","tcBills")" onclick="ShowPacifier()">
+            <h1 class="far fa-money-bill-alt fa-4x" style="color:#7923c4"></h1>
+            <h3>Detalle de Ventas</h3>
+        </a>
+    </div>
+
+    <h1 class="h1" style="border-bottom:2px solid #6a567c; color:#6a567c"><i class="fas fa-chart-pie"></i>  Reportes</h1>
+    <div class="row">
+        <a class="col-xs-6 col-sm-3 flatButton" href="@Url.Action("ClientsByGroup","Reports")" onclick="ShowPacifier()">
+            <h1 class="fas fa-clipboard-list fa-4x" style="color:#7923c4"></h1>
+            <h3>Grupos</h3>
+        </a>
+        <a class="col-xs-6 col-sm-2 flatButton" href="@Url.Action("Index","Reports")" onclick="ShowPacifier()">
+            <h1 class="fas fa-chart-bar fa-4x" style="color:#7923c4"></h1>
+            <h3>Productos</h3>
+        </a>
+        <a class="col-xs-6 col-sm-2 flatButton" href="@Url.Action("ServiceIdex","Reports")" onclick="ShowPacifier()">
+            <h1 class="fas fa-chart-line fa-4x" style="color:#7923c4"></h1>
+            <h3>Servicios </h3>
+        </a>
+        <a class="col-xs-6 col-sm-2 flatButton" href="@Url.Action("ExpenseReport","Reports")" onclick="ShowPacifier()">
+            <h1 class="fa fa-clipboard fa-4x" style="color:#7923c4"></h1>
+            <h3>Gastos</h3>
+        </a>
+        <a class="col-xs-6 col-sm-3 flatButton" href="@Url.Action("FinancialReport","Reports")" onclick="ShowPacifier()">
+            <h1 class="fas fa-chart-pie fa-4x" style="color:#7923c4"></h1>
+            <h3>Financiero</h3>
+        </a>
+    </div>
+</div>
+
+<div id="pacifier" class="hidden"
+     style="left:0; top:0; position:absolute; width:100%; height:100%;
+    background-position:center; background-repeat:no-repeat; background-color:rgba(95, 85, 95, 0.85);
+    background-image:url('http://4.bp.blogspot.com/-JF6M1HaI9rQ/VD_eCkLpG7I/AAAAAAAAAXk/0f1ym7hBXYs/s1600/Loading-Circle.gif');
+    display: flex; background-size:150px;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    z-index:9;
+     ">
+    <h3 class="text-center" style="color:white; padding-top:100px">
+        Cargando...
+    </h3>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    function ShowPacifier() {
+        $("#pacifier").removeClass("hidden");
+    }
+</script>

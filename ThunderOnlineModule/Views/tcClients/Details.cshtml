@@ -1,0 +1,285 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@model ThunderOnlineModule.Models.tcClient
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <h4>Clientes</h4>
+    <p style="float:right;">
+        @Html.ActionLink("Modificar", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Regresar", "Index")
+    </p><br />
+    <hr />
+    <dl class="dl-horizontal" style="color:#fff">
+        <dt>Codigo</dt>
+        <dd>@Model.Id </dd>
+        <dt>Nombre</dt>
+        <dd>@Html.DisplayFor(model => model.Name)</dd>
+        <dt>Fecha Nac.</dt>
+        <dd>@Html.DisplayFor(model => model.BirthDate)</dd>
+        <dt>Grupo</dt>
+        <dd>@Html.DisplayFor(model => model.tcGroup.Name)</dd>
+        <dt>Email</dt>
+        <dd>@Html.DisplayFor(model => model.Email)</dd>
+        <dt>Encargado</dt>
+        <dd>@Html.DisplayFor(model => model.Parent)</dd>
+        <dt>Teléfono</dt>
+        <dd>@Html.DisplayFor(model => model.Phone)</dd>
+        <dt>Comentario</dt>
+        <dd>@Html.DisplayFor(model => model.Comments)</dd>
+    </dl>
+</div>
+
+<ul class="nav nav-tabs">
+    <li><a data-toggle="tab" href="#balance">Balance</a></li>
+    <li class="active"><a data-toggle="tab" href="#services">Servicios</a></li>
+    <li><a data-toggle="tab" href="#products">Productos</a></li>
+</ul>
+
+<div class="tab-content">
+    <div id="balance" class="tab-pane fade">
+        <a class="btn btn-warning" data-toggle="modal" data-target="#payment" id="btn" style="margin:10px; float:right">Cobrar</a>
+        <a href="@Url.Action("PrintingDetails","tcClients", new { id = Model.Id.Trim() })" target="_blank" class="btn btn-default" id="printBtn" style="margin:10px; float:right"><span class="glyphicon glyphicon-print"></span> Imprimir Balance </a>
+        <br />
+        <table class="table table-bordered table-hover" id="balanceDetail">
+            <tr style="font-weight:bold; color:#fff; text-align:center" class="transparent">
+                <td>Fecha</td>
+                <td>Abono</td>
+                <td>Crédito</td>
+                <td>Comprobante</td>
+                <td>Metodo Pago</td>
+                <td>Balance</td>
+            </tr>
+            @{ decimal? balance = 0;}
+            @foreach (var item in Model.tcClientDetails)
+            {
+                <tr style="text-align:right;">
+                    <td>@item.tcBill.Date.Value.ToShortDateString()</td>
+                    <td>
+                        @if (item.Payment != 0)
+                        {
+                            <div> @string.Format("{0:C}", item.Payment)</div>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Credit != 0)
+                        {
+                            <div>@string.Format("{0:C}", item.Credit)</div>
+                        }
+                    </td>
+                    <td>@item.BillId</td>
+                    @{ var textResult = "";}
+                    @switch (item.PaymentMethod)
+                    {
+                        default:
+                            textResult = "Efectivo";
+                            break;
+                        case 1:
+                            textResult = "Tarjeta";
+                            break;
+                        case 2:
+                            textResult = "Cheque";
+                            break;
+                        case 3:
+                            textResult = "Depósito";
+                            break;
+                    }
+                    @{ if (item.tcBill.IsCredit == true)
+                        {
+                            textResult = "";
+                        }}
+                    <td>@textResult</td>
+                    @{
+                        if (item.Credit != null) { balance = balance + item.Credit; }
+                        if (item.Payment != null) { balance = balance - item.Payment; }
+                    }
+                    <td>@string.Format("{0:C}", balance)</td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div id="services" class="tab-pane fade in active">
+
+        <a href="@Url.Action("ServiceSale","tcServices")" class="btn btn-primary" id="btnService" data-clipboard-text="@Model.Id" style="margin:10px; float:right">
+            Cobrar
+        </a>
+        <br />
+
+        <table class="table table-bordered table-hover" id="serviceTable">
+            <tr style="font-weight:bold; color:#fff; text-align:center" class="transparent">
+                <td>Fecha</td>
+                <td>Servicio</td>
+                <td>Precio</td>
+                <td>Comprobante</td>
+                <td>Metodo Pago</td>
+            </tr>
+
+            @foreach (var bill in Model.tcBills.OrderByDescending(b => b.Id))
+            {
+                foreach (var service in bill.tcServiceSales)
+                {
+                    <tr style="text-align:right">
+                        <td>@service.tcBill.Date.Value.ToShortDateString()</td>
+                        <td>@service.tcService.Name</td>
+                        <td>@string.Format("{0:C}", service.Price)</td>
+                        <td>@bill.Id</td>
+                        @{ var textResult = "";}
+                        @switch (bill.PaymentMethod)
+                        {
+                            default:
+                                textResult = "Efectivo";
+                                break;
+                            case 1:
+                                textResult = "Tarjeta";
+                                break;
+                            case 2:
+                                textResult = "Cheque";
+                                break;
+                            case 3:
+                                textResult = "Depósito";
+                                break;
+                        }
+                        <td id="paymentMethod">@textResult</td>
+                    </tr>
+                }
+
+
+            }
+        </table>
+
+    </div>
+    <div id="products" class="tab-pane fade">
+        <a href="@Url.Action("Sale","tcProductSales")" class="btn btn-success" id="btnProduct" data-clipboard-text="@Model.Id" style="margin:10px; float:right">
+            Cobrar
+        </a>
+        <br />
+        <table class="table table-bordered table-hover" id="productTable">
+            <tr style="font-weight:bold; color:#fff; text-align:center" class="transparent">
+                <td>Fecha</td>
+                <td>Producto</td>
+                <td>Precio</td>
+                <td>Comprobante</td>
+                <td>Metodo Pago</td>
+            </tr>
+
+            @foreach (var bill in Model.tcBills.OrderByDescending(b => b.Id))
+            {
+                foreach (var service in bill.tcProductSales)
+                {
+                    if (bill.IsCredit == false)
+                    {
+                        <tr style="text-align:right">
+                            <td>@service.tcBill.Date.Value.ToShortDateString()</td>
+                            <td>@service.tcProduct.Name</td>
+                            <td>@string.Format("{0:C}", service.Price)</td>
+                            <td>@bill.Id</td>
+                            @{ var textResult = "";}
+                            @switch (bill.PaymentMethod)
+                            {
+                                default:
+                                    textResult = "Efectivo";
+                                    break;
+                                case 1:
+                                    textResult = "Tarjeta";
+                                    break;
+                                case 2:
+                                    textResult = "Cheque";
+                                    break;
+                                case 3:
+                                    textResult = "Depósito";
+                                    break;
+                            }
+                            <td>@textResult</td>
+                        </tr>
+                    }
+
+                }
+
+
+            }
+        </table>
+    </div>
+</div>
+
+<div id="payment" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Abono</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <label for="paymentMethod" class="col-sm-3 control-label">Forma de Pago</label>
+                    <select id="paymentMethod" name="paymentMethod" class="col-sm-9 form-control">
+                        <option value="0" ng-selected="true">Efectivo</option>
+                        <option value="1">Tarjeta</option>
+                        <option value="2">Cheque</option>
+                        <option value="3">Depósito</option>
+                    </select>
+                </div>
+
+                <div class="row">
+                    <label for="paymentAmount" class="col-sm-3 control-label">Monto</label>
+                    <input id="paymentAmount" class="form-control col-sm-9" type="number" value="1" min="1" step="any" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="postPayment()">Aceptar</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+        background-color: slategrey;
+        color: #fff;
+        font-weight: bold;
+    }
+</style>
+
+
+<script src="~/Scripts/dist/clipboard.min.js"></script>
+<script>
+    var btnService = document.getElementById('btnService');
+    var sClipboard = new ClipboardJS(btnService);
+
+    var btnProduct = document.getElementById('btnProduct');
+    var clipboard = new ClipboardJS(btnProduct);
+
+
+    function postPayment() {
+        $.post("/api/sales/newBill")
+            .done(function (billId) {
+                SetBillDetails(billId);
+            });
+
+        function SetBillDetails(billId) {
+
+            var data = "";
+            data = billId + "," + "@Model.Id.Trim()" + "," + $('select[name=paymentMethod]').val() + ",'false'," + $("#userName").text().trim();
+
+            $.post("/api/sales/SetBillDetails/" + data)
+                .done(function (id) {
+                    var clientDetail = "@Model.Id.Trim()" + ",0," + $('#paymentAmount').val() +  "," + id;
+
+                    $.post("/api/sales/postClientDetail/" + clientDetail)
+                        .done(function () {
+                            console.log('Abono registrado');
+                        });
+
+                    alert("Comprobante # " + id);
+                    location = "/home/index";
+                });
+        }
+
+    }
+</script>

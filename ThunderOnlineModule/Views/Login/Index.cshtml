@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+
+<style>
+    .main {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/142996/slider-2.jpg);
+        background-size: cover;
+        overflow: auto;
+        left: 0;
+        top: 0;
+    }
+
+    .cont {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -15rem;
+        margin-top: -26.5rem;
+        width: 30rem;
+        height: 53rem;
+        overflow: hidden;
+    }
+
+    .login {
+        position: relative;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(146, 135, 187, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+        transition: opacity 0.1s, -webkit-transform 0.3s cubic-bezier(0.17, -0.65, 0.665, 1.25);
+        transition: opacity 0.1s, transform 0.3s cubic-bezier(0.17, -0.65, 0.665, 1.25);
+        transition: opacity 0.1s, transform 0.3s cubic-bezier(0.17, -0.65, 0.665, 1.25), -webkit-transform 0.3s cubic-bezier(0.17, -0.65, 0.665, 1.25);
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+
+    .text {
+        display: inline-block;
+        width: 22rem;
+        height: 100%;
+        padding-left: 1.5rem;
+        font-size: 1.5rem;
+        background: rgba(253, 252, 253, 0.39);
+        padding: 12px;
+        border-radius: 15px;
+        /*background: transparent;*/
+        color: #FDFCFD;
+    }
+
+    input, button {
+        outline: none;
+        border: none;
+    }
+</style>
+
+<main class="main">
+
+    <div class="cont">
+        <div class="login">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div style="width: 50%;position: relative;left: 22%;top: 30px;">
+                    <img src="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/user-male-icon.png"
+                         alt="Alternate Text" class="img-responsive img-circle" />
+                </div>
+                <br />
+                <div class="form-group" style="margin-top:70px">
+                    <div class="text-center">
+                        <input type="text" id="UserName" name="UserName" class="text" value="" placeholder="usuario" autofocus required />
+                        <br />
+                        <br />
+                        <input type="password" id="Password" name="Password" class="text" value="" placeholder="contraseña" required />
+                        <br />
+                        <br />
+                        <input type="submit" value="Acceder" style="width: 80%;padding: 10px;background-color: lightcoral;color: #fff;" />
+                    </div>
+                </div>
+            }
+            <br />
+            <h4 style="color:#fff">@ViewBag.ErrorMessage</h4>
+        </div>
+    </div>
+</main>

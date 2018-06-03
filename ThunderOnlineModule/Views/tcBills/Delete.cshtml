@@ -1,0 +1,145 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@model ThunderOnlineModule.Models.tcBill
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2 class="text-danger">Anular</h2>
+
+<h3>¿Dese anular este comprobante? <small>Esta acción es irreversible.</small></h3>
+<div>
+    <dl class="dl-horizontal" style="color:#fff">
+        <dt>
+            Tipo Transacción
+        </dt>
+        @{ if (Model.IsCredit == true)
+            {
+                <dd>Crédito</dd>
+            }
+            else
+            {
+                <dd>Contado</dd>
+            }
+        }
+        <dt>
+            Forma de Pago
+        </dt>
+        @{
+            if (Model.PaymentMethod == 0)
+            {
+                <dd>Efectivo</dd>
+            }
+            if (Model.PaymentMethod == 1)
+            {
+                <dd>Tarjeta</dd>
+            }
+            if (Model.PaymentMethod == 3)
+            {
+                <dd>Cheque</dd>
+            }
+            if (Model.PaymentMethod == 4)
+            {
+                <dd>Depósito</dd>
+            }
+        }
+        <dt>
+            Fecha
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            Cliente
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tcClient.Name)
+        </dd>
+
+        <dt>
+            Usuario
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tcUser.Id)
+        </dd>
+
+    </dl>
+
+    <table class="table table-bordered table-hover " style=" background-color:rgba(216, 216, 216, 0.9);">
+
+        @{ if (Model.tcProductSales.Count > 0 || Model.tcServiceSales.Count > 0)
+            {
+                <thead>
+                    <tr style="font-weight:bold;">
+                        <td>Codigo</td>
+                        <td>Producto / Servicio</td>
+                        <td>Cantidad</td>
+                        <td>Precio</td>
+                        <td>Subtotal</td>
+                    </tr>
+                </thead>
+            }
+            if (Model.tcClientDetails.Count > 0)
+            {
+                <thead>
+                    <tr style="font-weight:bold;">
+                        <td>Fecha</td>
+                        <td>Id</td>
+                        <td>Cliente</td>
+                        <td>Abono</td>
+                    </tr>
+                    <tr>
+                        @foreach (var item in Model.tcClientDetails)
+                        {
+                            <td>@item.tcBill.Date.Value.ToShortDateString()</td>
+                            <td>@item.tcClient.Id</td>
+                            <td>@item.tcClient.Name</td>
+                            <td>@item.Payment</td>
+                        }
+                    </tr>
+                </thead>
+            }
+        }
+
+        @{
+            foreach (var item in Model.tcProductSales)
+            {
+                <tr>
+                    <td>@item.tcProduct.Id</td>
+                    <td>@item.tcProduct.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price</td>
+                    @{ var subTotal = item.Price * item.Quantity;}
+                    <td>@subTotal</td>
+                </tr>
+            }
+        }
+
+        @{ foreach (var item in Model.tcServiceSales)
+            {
+                <tr>
+                    <td>@item.tcService.Id</td>
+                    <td>@item.tcService.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Price</td>
+                    @{ var subTotal = item.Price * item.Quantity;}
+                    <td>@subTotal</td>
+                </tr>
+            }
+        }
+
+
+    </table>
+</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <button class="btn btn-danger" type="submit">Confirmar</button> | @Html.ActionLink("Regresar", "Index")
+    </div>
+}

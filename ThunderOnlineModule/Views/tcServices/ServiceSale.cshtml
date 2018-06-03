@@ -1,0 +1,226 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@{
+    ViewBag.Title = "Service Sale";
+}
+<style>
+    a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+    }
+
+        a:hover {
+            background-color: #ddd;
+            color: black;
+            text-decoration: none;
+        }
+
+    .next {
+        background-color: #332f34;
+        color: white;
+    }
+
+    .round {
+        border-radius: 50%;
+    }
+
+    .radio {
+        height: 18px;
+        width: 18px;
+        margin-right: 5px;
+    }
+</style>
+
+<main ng-app="ZionApp" ng-controller="ServiceSalesController">
+    <div class="container transparent">
+        <a href="@Url.Action("Index","Home")" style="float:right; margin-top:35px">Regresar</a>
+        <h3 style="color:#000">Cliente</h3>
+        <div class="row">
+            <div class="col-md-2"><input autofocus ng-model="clientId" ng-change="GetClientName()" class="form-control" type="text" placeholder="Codigo" /></div>
+            <div class="col-md-4"><input ng-model="clientName" class="form-control" type="text" placeholder="Cliente" /></div>
+            <a href="" class="next round">&#8250;</a>
+        </div>
+    </div>
+
+    <div class="container transparent" ng-show="clientFound">
+        <h3 style="color: #00ff90; border-bottom: 2px solid;">Servicio</h3>
+        <div class="row">
+            <div class="col-md-2">
+                <label for="serviceId" class="label">Codigo</label>
+                <input ng-model="serviceId" ng-change="GetServiceName(serviceId)" id="serviceId" class="form-control" type="text" placeholder="Codigo" />
+            </div>
+            <div class="col-md-4">
+                <label for="serviceName" class="label">Servicio</label>
+                <input ng-model="serviceName" id="serviceName" class="form-control" type="text" placeholder="Servicio" />
+            </div>
+            <div class="col-md-1">
+                <label for="quantity" class="label">Cantidad</label>
+                <input ng-model="serviceQuantity" ng-init="1" ng-change="CalculateSubTotal()" id="quantity" class="form-control" type="number" value="1" />
+            </div>
+            <div class="col-md-2">
+                <label for="price" class="label">Precio</label>
+                <input ng-model="servicePrice" ng-change="CalculateSubTotal()" id="price" class="form-control" type="number" />
+            </div>
+            <div class="col-md-2">
+                <label for="subTotal" class="label">Sub Total</label>
+                <input ng-model="subTotal" id="subTotal" class="form-control" type="number" readonly />
+            </div>
+            <label class="label">Agregar</label>
+            <a href="" class="next round" ng-click="addSaleToList()">+</a>
+        </div>
+        <div class="row">
+            <div class="container">
+                <table class="table table-hover col-md-12 transparent">
+                    <thead>
+                        <tr>
+                            <th>Codigo</th>
+                            <th>Servicio</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="sale in saleList">
+                            <td>{{sale.ServiceId}}</td>
+                            <td>{{sale.ServiceName}}</td>
+                            <td>{{sale.Quantity}}</td>
+                            <td>Q. {{sale.Price}}</td>
+                            <td>Q. {{sale.SubTotal}}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>Total</td>
+                            <td><h4> Q. {{total}} </h4></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-right">
+                <button data-toggle="modal" data-target="#confirmMessage" class="btn btn-default"><i class="glyphicon glyphicon-print"></i> Efectuar Cobro</button>
+                <a href="@Url.Action("Index","Home")" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i> Cancelar</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Message -->
+    <div id="confirmMessage" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Detalles de Transacción</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="paymentDiv">
+                        <label for="paymentMethod" class="col-sm-3 control-label">Forma de Pago</label>
+                        <select ng-model="paymentMethod" ng-init="paymentMethod='0'" id="paymentMethod" class="col-sm-9 form-control">
+                            <option value="0" ng-selected="true">Efectivo</option>
+                            <option value="1">Tarjeta</option>
+                            <option value="2">Cheque</option>
+                            <option value="3">Depósito</option>
+                        </select>
+                    </div>
+                    <br />
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" ng-click="postSale()">Confirmar</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</main>
+
+<script>
+    var app = angular.module('ZionApp', []);
+    app.controller('ServiceSalesController', function ($scope, $http) {
+        //changhe this
+
+        $scope.clientFound = false;
+        $scope.serviceQuantity = 1;
+        $scope.saleList = [];
+        $scope.total = 0;
+
+        $scope.GetClientName = function () {
+            $http.get("/api/sales/getclient/" + $scope.clientId)
+                .then(function (response) {
+                    $scope.clientName = response.data.Name;
+                    $scope.clientFound = true;
+                    setTimeout(function () { $("#serviceId").focus(); }, 200)
+
+                }, function myError(response) {
+                    console.log($scope.clientId + ' no es un código válido.')
+                }
+                );
+        }
+
+        $scope.GetServiceName = function () {
+            $http.get("/api/sales/getService/" + $scope.serviceId)
+                .then(function (response) {
+                    $scope.serviceName = response.data.Name;
+                    $scope.servicePrice = response.data.Price;
+                    $scope.CalculateSubTotal();
+                }, function myError(response) {
+                    console.log($scope.serviceId + ' no es un código válido.')
+                });
+        }
+
+        $scope.CalculateSubTotal = function () {
+            $scope.subTotal = $scope.serviceQuantity * $scope.servicePrice;
+        }
+
+        $scope.addSaleToList = function () {
+            var sale = { ServiceId: $scope.serviceId, ServiceName: $scope.serviceName, Quantity: $scope.serviceQuantity, Price: $scope.servicePrice, SubTotal: $scope.subTotal }
+            $scope.total += $scope.subTotal;
+            $scope.saleList.push(sale);
+            $scope.serviceId = "";
+            $scope.serviceName = "";
+            $scope.subTotal = 0;
+            $scope.Quantity = 1;
+            $scope.servicePrice = 0;
+            $("#serviceId").focus();
+        }
+
+        $scope.postSale = function () {
+            var sale = "";
+            for (var i = 0; i < $scope.saleList.length; i++) {
+                sale = sale + $scope.saleList[i].ServiceId + ",";
+                sale = sale + $scope.saleList[i].Quantity + ",";
+                if (i < $scope.saleList.length - 1) {
+                    sale = sale + $scope.saleList[i].Price + "!";
+                } else {
+                    sale = sale + $scope.saleList[i].Price;
+                }
+            }
+
+            $.post("/api/sales/postSaleService/" + sale)
+                .done(function (billId) {
+                    $scope.SetBillDetails(billId);
+                });
+        }
+
+        $scope.SetBillDetails = function (billId) {
+
+            var data = billId + "," + $scope.clientId + "," + $scope.paymentMethod + ",false," + $("#userName").text().trim(); //no hay servicios al credito
+
+            $.post("/api/sales/SetBillDetails/" + data)
+                .done(function (id) {
+                    SendToPrint(id);
+                    alert("Comprobante #" + id);
+                    location = "/home/index";
+                });
+        }
+    });
+</script>

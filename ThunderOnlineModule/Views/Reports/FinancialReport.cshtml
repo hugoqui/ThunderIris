@@ -1,0 +1,183 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@model List<ThunderOnlineModule.Models.tcBill>
+@{
+    ViewBag.Title = "Financial Report";
+    decimal? total = 0;
+    decimal? utilityTotal = 0;
+    decimal? expenseTotal = 0;
+
+    var fromDate = ViewBag.fromYear + "-";
+    var mm = ViewBag.fromMonth;
+    if (mm < 10) { mm = "0" + mm; }
+    var dd = ViewBag.fromDay;
+    if (dd < 10) { dd = "0" + dd; }
+
+    fromDate = fromDate + mm + "-" + dd;
+
+    var toDate = ViewBag.toYear + "-";
+    mm = ViewBag.toMonth;
+    if (mm < 10) { mm = "0" + mm; }
+    dd = ViewBag.toDay;
+    if (dd < 10) { dd = "0" + dd; }
+
+    toDate = toDate + mm + "-" + dd;
+}
+<a class="btn" style="float:right; margin-top:15px" href="@Url.Action("Index","Home")">Regresar</a>
+<form action="FinancialReport" method="post">
+    <h2 style="color: #6a567c; border-bottom: 2px solid;">Reporte Financiero</h2>
+    <div class="container transparent">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="fromDate">Fecha Inicial</label>
+                <input onchange="DateChange()" type="date" id="fromDate" name="fromDate" class="form-control" value="@fromDate" />
+            </div>
+            <div class="col-md-5">
+                <label for="fromDate">Fecha Inicial</label>
+                <input onchange="DateChange()" type="date" id="toDate" name="toDate" class="form-control" value="@toDate" />
+            </div>
+            <div class="col-md-2">
+                <div class="hidden-sm hidden-xs" style="height:25px"></div>
+                <button type="submit" class="btn btn-default">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+</form>
+<br />
+<table class="table table-bordered">
+    <thead>
+        <tr style="font-weight:bold">
+            <td>#</td>
+            <td width="40">Pago</td>
+            <td>Fecha</td>
+            <td>Producto</td>
+            <td align="right">Cantidad</td>
+            <td align="right">Precio</td>
+            <td align="right">Total</td>
+            <td align="right">Utilidad</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bill in Model)
+        {
+            foreach (var sale in bill.tcProductSales)
+            {
+
+                var subTotal = sale.Price * sale.Quantity;
+                total = total + subTotal;
+                var paymentMethod = "Efectivo";
+                switch (sale.tcBill.PaymentMethod)
+                {
+                    default:
+                        paymentMethod = "Efectivo";
+                        break;
+                    case 1:
+                        paymentMethod = "Tarjeta";
+                        break;
+                    case 2:
+                        paymentMethod = "Cheque";
+                        break;
+                    case 3:
+                        paymentMethod = "Depósito";
+                        break;
+                }
+
+                <tr>
+                    <td>@bill.Id</td>
+                    <td>@paymentMethod</td>
+                    <td>@bill.Date.Value.ToShortDateString()</td>
+                    <td>@sale.ProductId | @sale.tcProduct.Name</td>
+                    <td align="right">  @sale.Quantity</td>
+                    <td align="right"> @string.Format("{0:C}", sale.Price)  </td>
+                    <td align="right">  @string.Format("{0:C}", subTotal)  </td>
+
+                    @{
+                        var cost = sale.tcProduct.Cost;
+                        decimal? utility = (sale.Price - cost) * sale.Quantity;
+                        utilityTotal = utilityTotal + utility;
+                    }
+
+                    <td align="right">  @string.Format("{0:C}", utility)  </td>
+                </tr>
+            }
+
+            foreach (var sale in bill.tcServiceSales)
+            {
+
+                var subTotal = sale.Price * sale.Quantity;
+                total = total + subTotal;
+                var paymentMethod = "Efectivo";
+                switch (sale.tcBill.PaymentMethod)
+                {
+                    default:
+                        paymentMethod = "Efectivo";
+                        break;
+                    case 1:
+                        paymentMethod = "Tarjeta";
+                        break;
+                    case 2:
+                        paymentMethod = "Cheque";
+                        break;
+                    case 3:
+                        paymentMethod = "Depósito";
+                        break;
+                }
+
+                <tr>
+                    <td>@bill.Id</td>
+                    <td>@paymentMethod</td>
+                    <td>@bill.Date.Value.ToShortDateString()</td>
+                    <td>@sale.ServiceId | @sale.tcService.Name</td>
+                    <td align="right">  @sale.Quantity</td>
+                    <td align="right"> @string.Format("{0:C}", sale.Price)  </td>
+                    <td align="right">  @string.Format("{0:C}", subTotal)  </td>
+
+                    @{
+                        decimal? utility = sale.Price * sale.Quantity;
+                        utilityTotal = utilityTotal + utility;
+                    }
+
+                    <td align="right">  @string.Format("{0:C}", utility)  </td>
+                </tr>
+            }
+        }
+        <tr style="font-weight:bold;">
+            <td colspan="6" align="right">T O T A L</td>
+            <td align="right">@string.Format("{0:C}", total) </td>
+            <td align="right">@string.Format("{0:C}", utilityTotal) </td>
+        </tr>
+
+        <tr style="background-color:darkslategray; color:#fff; font-weight:bold">
+            <td colspan="8" align="center">Gastos</td>
+        </tr>
+        <tr style="font-weight:bold">
+            <td colspan="2">Fecha</td>
+            <td colspan="2">Gasto</td>
+            <td colspan="3">Comentario</td>
+            <td align="center">Monto</td>
+        </tr>
+        @foreach (var item in ViewBag.Expenses)
+        {
+            expenseTotal = expenseTotal + item.Amount;
+            <tr>
+                <td colspan="2">@item.Date.ToShortDateString()</td>
+                <td colspan="2">@item.Name</td>
+                <td colspan="3">@item.Comments</td>
+                <td class="text-right">@string.Format("{0:C}", item.Amount)</td>
+            </tr>
+        }
+
+        <tr style="font-weight:bold;">
+            <td colspan="7" align="right">TOTAL DE GASTOS</td>
+            <td align="right">@string.Format("{0:C}", expenseTotal) </td>
+        </tr>
+        <tr style="font-weight:bold;">
+            <td colspan="7" align="right">UTILIDAD NETA</td>
+            <td align="right">@string.Format("{0:C}", utilityTotal - expenseTotal) </td>
+        </tr>
+
+
+
+    </tbody>
+
+</table>
+

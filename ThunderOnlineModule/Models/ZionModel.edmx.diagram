@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c90526e4098c4be0a908b4bf63c0908d" Name="Diagram1" ZoomLevel="82">
+        <EntityTypeShape EntityType="ZionModel.tcBill" Width="1.5" PointX="5.25" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcClient" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcExpense" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcGroup" Width="1.5" PointX="0.75" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcProduct" Width="1.5" PointX="5.375" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcProductSale" Width="1.5" PointX="7.5" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcPurchaseCorrelative" Width="1.5" PointX="7.75" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcPurchas" Width="1.5" PointX="10" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcService" Width="1.5" PointX="8.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcServiceSale" Width="1.5" PointX="10.5" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ZionModel.tcUser" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
+        <AssociationConnector Association="ZionModel.Bill_Client" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.Bill_User" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.ProductSales_Bill" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.ServiceSales_Bill" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.Client_Group" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.ProductSales_Product" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.Purchase_PurchaseCorrelative" ManuallyRouted="false" />
+        <AssociationConnector Association="ZionModel.ServiceSales_ServiceId" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ZionModel.tcClientDetail" Width="1.5" PointX="7.5" PointY="10.5" />
+        <AssociationConnector Association="ZionModel.FK__tcClientD__BillI__67DE6983" />
+        <AssociationConnector Association="ZionModel.FK__tcClientD__Clien__68D28DBC" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,67 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@model PagedList.IPagedList<ThunderOnlineModule.Models.tcClient>
+@using PagedList.Mvc;
+@using ThunderOnlineModule.Models
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Clientes</h2>
+
+<p style="float:right">@Html.ActionLink("Regresar", "Index", "Home")</p>
+
+<p>
+    @Html.ActionLink("Crear Nuevo", "Create")
+</p>
+@using (Html.BeginForm("Index", "tcClients", FormMethod.Get))
+{
+    <p style="height:45px">
+        <span class="col-xs-2">Buscar nombre:</span>
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string, new { @class = "form-control col-xs-6" })
+        <input type="submit" value="Buscar" class="btn btn-default col-xs-2" style="margin-left:10px" />
+    </p>
+}
+
+<table class="table table-hover ">
+    <tr>
+        <th>Codigo</th>
+        <th>Nombre</th>
+        <th>Grupo</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Id, "Details", new { id = item.Id.Trim() })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @{var group = new GroupDisplay(int.Parse(item.Group.ToString()));}
+                @group.Name
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+
+            <td>
+                @Html.ActionLink("Modificar", "Edit", new { id = item.Id.Trim() })
+            </td>
+        </tr>
+    }
+</table>
+
+<br />
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+                                      new { page, currentFilter = ViewBag.CurrentFilter }))

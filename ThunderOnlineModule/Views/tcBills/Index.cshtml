@@ -1,0 +1,90 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+@model PagedList.IPagedList<ThunderOnlineModule.Models.tcBill>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+<a href="@Url.Action("Index","Home")" style="float:right; margin-top:35px">Regresar</a>
+<h2>Detalle de Ventas</h2>
+
+
+<table class="table table-hover">
+    <tr>
+        <th>#</th>
+        <th>
+            Credito / Contado
+        </th>
+        <th>
+            Forma de Pago
+        </th>
+        <th>
+            Fecha
+        </th>
+        <th>
+            Cliente
+        </th>
+        <th>
+            Usuario
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+
+            @if (item.IsCredit == true)
+            {
+                <td>Crédito</td>
+            }
+            else
+            {
+                <td>Contado</td>
+            }
+
+            @switch (item.PaymentMethod)
+            {
+                case 1:
+                    <td>Efectivo</td>
+                    break;
+                case 2:
+                    <td>Tarjeta </td>
+                    break;
+                case 3:
+                    <td>Cheque </td>
+                    break;
+                case 4:
+                    <td>Boleta</td>
+                    break;
+                default:
+                    <td>Efectivo </td>
+                    break;
+            }
+
+            <td>
+                @Convert.ToDateTime(item.Date).ToShortDateString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tcClient.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.tcUser.Id)
+            </td>
+            <td>
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>
+
+
+        Página @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) de @Model.PageCount
+
+        @Html.PagedListPager(Model, page => Url.Action("Index",
+                                                                              new { page, currentFilter = ViewBag.CurrentFilter }))
+

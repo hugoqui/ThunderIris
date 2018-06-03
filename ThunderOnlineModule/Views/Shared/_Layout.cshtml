@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - ZionOnline</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl" crossorigin="anonymous"></script>
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
+    @*<link rel="icon" type="image/png" href="http://example.com/image.png" />*@
+    <link rel="icon" type="image/png" href="~/Content/img/zionlogo.png" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+    <div class="container body-content">
+        <main style="padding:10px 20px">
+            @RenderBody()
+            @{
+                var text = "";
+                try
+                {
+                    text = System.Web.HttpContext.Current.Session["logged"].ToString().Trim();
+                }
+                catch (Exception)
+                {
+
+                    text = "";
+                }
+            }
+            
+            <a href="@Url.Action("LogOut","Login")" title="Cerrar Sesión"><h5 id="userName" class="text-right text-warning"><strong>@text</strong></h5></a>
+        </main>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <!-- SignalR -->
+    <script src="~/Scripts/jquery.signalR-2.2.3.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/app.js"></script>
+</body>
+</html>

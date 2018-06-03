@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ThunderOnlineModule.Models.tcClient>
+@using ThunderOnlineModule.Models
+@{
+    ViewBag.Title = "ClientsByGroup";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<a href="@Url.Action("Index","Home")" style="float:right; margin-top:35px">Regresar</a>
+<h2>Clientes por Grupo</h2>
+
+<form action="ClientsByGroup" method="post" style="margin-bottom:20px" class="hidden-print">
+    <div class="container transparent">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="fromDate">Grupo</label>
+                <select id="id" name="id" class="form-control" style="max-width:100%">
+                    @foreach (var item in ViewBag.Groups)
+                    {
+                        <option value="@item.Id">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div class="hidden-sm hidden-xs" style="height:25px"></div>
+                <button type="submit" class="btn btn-primary">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<h3 class="text-center text-primary">@ViewBag.GroupName</h3>
+
+<table class="table table-condensed table-bordered">
+    <tr>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Comentario
+        </th>
+        <th colspan="2" align="center" class="text-center">
+            Ultimo Pago
+        </th>
+    </tr>
+
+
+
+    @foreach (var item in Model)
+    {
+        tcBill lastBill = new tcBill();
+        tcServiceSale lastPayment = new tcServiceSale();
+
+        if (item.tcBills.Count > 0)
+        {
+            lastBill = item.tcBills.Last();
+            lastPayment = lastBill.tcServiceSales.Last();
+        }
+        
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comments)
+            </td>
+
+            <td>
+                @if (lastPayment.tcService != null)
+                {
+                    Html.Display(lastPayment.tcService.Name);
+                } 
+            </td>
+            <td align="right">
+                @String.Format("{0:C}", lastPayment.Price)  @* shows the price on the bill, not on the "SERVICES_TABLE" *@
+            </td>
+        </tr>
+    }
+
+</table>

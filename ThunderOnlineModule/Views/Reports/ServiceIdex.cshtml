@@ -1,0 +1,53 @@
+﻿@{ Layout = "~/Views/Shared/_Layout.cshtml";}
+<a class="btn" style="float:right" href="@Url.Action("Index","Home")">Regresar</a>
+
+<main>
+    <h3 style="color: #ae48c7; border-bottom: 2px solid;">Reporte de Ventas de Servicios</h3>
+    <div class="container transparent">
+        <div class="row">
+            <div class="col-md-5">
+                <label for="fromDate">Fecha Inicial</label>
+                <input onchange="DateChange()" type="date" id="fromDate" class="form-control" />
+            </div>
+            <div class="col-md-5">
+                <label for="fromDate">Fecha Inicial</label>
+                <input onchange="DateChange()" type="date" id="toDate" class="form-control" />
+            </div>
+            <div class="col-md-2">
+                <div class="hidden-sm hidden-xs" style="height:25px"></div>
+                <button onclick="GoToReport()" class="btn btn-primary">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+
+        if (day < 10) { day = "0" + day; }
+        if (month < 9) { month = "0" + month; }
+
+        $("#toDate").val(year + "-" + month + "-" + day);
+        $("#fromDate").val(year + "-" + month + "-" + day);
+
+        fromDate = $("#fromDate").val();
+        toDate = $("#toDate").val();
+    });
+
+    var fromDate = "";
+    var toDate = "";
+
+    function DateChange() {
+        fromDate = $("#fromDate").val();
+        toDate = $("#toDate").val();
+    }
+
+    function GoToReport() {
+        window.location = "ServiceSalesReport?fromDate=" + fromDate + "&toDate=" + toDate;
+    }
+</script>
