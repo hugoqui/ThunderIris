@@ -36,8 +36,8 @@
         <a href="@Url.Action("Index","Home")" style="float:right; margin-top:35px">Regresar</a>
         <h3 style="color:#000">Cliente</h3>
         <div class="row">
-            <div class="col-md-2"><input autofocus ng-model="clientId" ng-change="GetClientName()" class="form-control" type="text" placeholder="Codigo" /></div>
-            <div class="col-md-4"><input ng-model="clientName" class="form-control" type="text" placeholder="Cliente" /></div>
+            <div class="col-md-2"><input id="clientId" autofocus ng-model="clientId" ng-change="GetClientName()" class="form-control" type="text" placeholder="Codigo" /></div>
+            <div class="col-md-4"><input id="clientName" ng-model="clientName" class="form-control" type="text" placeholder="Cliente" /></div>
             <a href="" class="next round">&#8250;</a>
         </div>
     </div>
@@ -158,6 +158,9 @@
                 .then(function (response) {
                     $scope.clientName = response.data.Name;
                     $scope.clientFound = true;
+                    $("#clientId").attr("disabled", true);
+                    $("#clientName").attr("disabled", true);
+                    $("#clientId").val(response.data.Id);
                     setTimeout(function () { $("#serviceId").focus(); }, 200)
 
                 }, function myError(response) {

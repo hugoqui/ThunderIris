@@ -270,14 +270,12 @@
             $.post("/api/sales/SetBillDetails/" + data)
                 .done(function (id) {
                     var clientDetail = "@Model.Id.Trim()" + ",0," + $('#paymentAmount').val() +  "," + id;
-
                     $.post("/api/sales/postClientDetail/" + clientDetail)
                         .done(function () {
-                            console.log('Abono registrado');
+                            SendToPrint(id);
+                            alert("Comprobante # " + id);
+                            location = "/home/index";
                         });
-
-                    alert("Comprobante # " + id);
-                    location = "/home/index";
                 });
         }
 

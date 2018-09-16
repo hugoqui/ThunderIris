@@ -51,10 +51,16 @@
 
         if (item.tcBills.Count > 0)
         {
-            lastBill = item.tcBills.Last();
-            lastPayment = lastBill.tcServiceSales.Last();
+            var bills = item.tcBills.Where(b => b.tcServiceSales.Count > 0).ToList();
+
+            if (bills.Count > 0) { lastBill = bills.Last(); }
+
+            if (lastBill.tcServiceSales.Count > 0)
+            {
+                lastPayment = lastBill.tcServiceSales.Last();
+            }
         }
-        
+
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -66,13 +72,14 @@
             <td>
                 @if (lastPayment.tcService != null)
                 {
-                    Html.Display(lastPayment.tcService.Name);
-                } 
+                    <span>@lastPayment.tcService.Name</span>
+                }
             </td>
             <td align="right">
                 @String.Format("{0:C}", lastPayment.Price)  @* shows the price on the bill, not on the "SERVICES_TABLE" *@
             </td>
         </tr>
+
     }
 
 </table>
